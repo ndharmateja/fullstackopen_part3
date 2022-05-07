@@ -43,6 +43,10 @@ app.get('/api/persons/:id', (request, response) => {
   return person ? response.json(person) : response.status(404).end()
 })
 
+app.get('/', (request, response) => {
+  response.send(`<div>Go to <a href="/info">info</a></div>`)
+})
+
 app.get('/info', (request, response) => {
   response.send(
     `<div>Phonebook has info for ${
