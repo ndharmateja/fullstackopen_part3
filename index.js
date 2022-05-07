@@ -5,10 +5,10 @@ const cors = require('cors')
 const app = express()
 
 // Middleware
+app.use(express.static('build'))
 app.use(express.json())
 app.use(morgan('tiny'))
 app.use(cors())
-app.use(express.static('build'))
 
 let persons = [
   {
