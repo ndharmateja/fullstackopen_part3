@@ -74,18 +74,8 @@ app.post('/api/persons', (request, response) => {
       .json({ error: "'name' and 'number' must both be present" })
   }
 
-  // name must be unique
-  if (persons.filter((person) => person.name === name).length > 0) {
-    return response
-      .status(400)
-      .json({ error: `'${name}' already exists, it must be unique` })
-  }
-
-  const person = { name, number }
-  person.id = Math.floor(10000 * Math.random())
-
-  persons = persons.concat(person)
-  response.json(person)
+  const person = new Person({ name, number })
+  person.save().then((savedPerson) => response.json(savedPerson))
 })
 
 const PORT = process.env.PORT || 3001
