@@ -38,7 +38,7 @@ app.put('/api/persons/:id', (request, response, next) => {
   if (!name || !number) {
     return response
       .status(400)
-      .json({ error: "'name' and 'number' must both be present" })
+      .json({ error: '"name" and "number" must both be present' })
   }
 
   const person = { name, number }
@@ -50,7 +50,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then((result) => response.status(204).end())
+    .then((_result) => response.status(204).end())
     .catch((error) => next(error))
 })
 
@@ -61,7 +61,7 @@ app.post('/api/persons', (request, response, next) => {
   if (!name || !number) {
     return response
       .status(400)
-      .json({ error: "'name' and 'number' must both be present" })
+      .json({ error: '"name" and "number" must both be present' })
   }
 
   const person = new Person({ name, number })
