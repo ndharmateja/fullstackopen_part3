@@ -81,7 +81,7 @@ app.use((error, request, response, next) => {
   if (error.name === 'ValidationError' || error.name === 'MongoServerError')
     return response.status(400).send({ error: error.message })
 
-  // Otherwise forward it to next mw
+  // Otherwise forward it to next middleware
   next(error)
 })
 
