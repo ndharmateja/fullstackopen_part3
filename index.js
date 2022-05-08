@@ -54,7 +54,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch((error) => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const { name, number } = request.body
 
   // name and number should not be empty
@@ -65,16 +65,21 @@ app.post('/api/persons', (request, response) => {
   }
 
   const person = new Person({ name, number })
-  person.save().then((savedPerson) => response.json(savedPerson))
+  person
+    .save()
+    .then((savedPerson) => response.json(savedPerson))
+    .catch((error) => next(error))
 })
 
 // Error handling middleware
 app.use((error, request, response, next) => {
   console.log(error.message)
 
-  // If cast error, we return bad request error
+  // If cast/validation error, we return bad request error
   if (error.name === 'CastError')
     return response.status(400).send({ error: 'Malformed id' })
+  if (error.name === 'ValidationError')
+    return response.status(400).send({ error: error.message })
 
   // Otherwise forward it to next mw
   next(error)
