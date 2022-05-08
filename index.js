@@ -12,49 +12,23 @@ app.use(express.json())
 app.use(morgan('tiny'))
 app.use(cors())
 
-let persons = [
-  {
-    id: 1,
-    name: 'Arto Hellas',
-    number: '040-123456',
-  },
-  {
-    id: 2,
-    name: 'Ada Lovelace',
-    number: '39-44-5323523',
-  },
-  {
-    id: 3,
-    name: 'Dan Abramov',
-    number: '12-43-234345',
-  },
-  {
-    id: 4,
-    name: 'Mary Poppendieck',
-    number: '39-23-6423122',
-  },
-]
-
 app.get('/api/persons', (request, response) => {
   Person.find({}).then((persons) => response.json(persons))
 })
 
-app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id)
-
-  const person = persons.find((person) => person.id === id)
-  return person ? response.json(person) : response.status(404).end()
-})
-
-app.get('/', (request, response) => {
-  response.send(`<div>Go to <a href="/info">info</a></div>`)
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+    .then((person) =>
+      person ? response.json(person) : response.status(404).end()
+    )
+    .catch((error) => next(error))
 })
 
 app.get('/info', (request, response) => {
-  response.send(
-    `<div>Phonebook has info for ${
-      persons.length
-    } people</div></br><div>${new Date()}</div>`
+  Person.countDocuments().then((count) =>
+    response.send(
+      `<div>Phonebook has info for ${count} people</div></br><div>${new Date()}</div>`
+    )
   )
 })
 
