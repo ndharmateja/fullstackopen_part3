@@ -78,7 +78,7 @@ app.use((error, request, response, next) => {
   // If cast/validation error, we return bad request error
   if (error.name === 'CastError')
     return response.status(400).send({ error: 'Malformed id' })
-  if (error.name === 'ValidationError')
+  if (error.name === 'ValidationError' || error.name === 'MongoServerError')
     return response.status(400).send({ error: error.message })
 
   // Otherwise forward it to next mw
