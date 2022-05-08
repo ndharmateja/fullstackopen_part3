@@ -58,6 +58,22 @@ app.get('/info', (request, response) => {
   )
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+  const { name, number } = request.body
+
+  if (!name || !number) {
+    return response
+      .status(400)
+      .json({ error: "'name' and 'number' must both be present" })
+  }
+
+  const person = { name, number }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedPerson) => response.json(updatedPerson))
+    .catch((error) => next(error))
+})
+
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
     .then((result) => response.status(204).end())
@@ -78,6 +94,7 @@ app.post('/api/persons', (request, response) => {
   person.save().then((savedPerson) => response.json(savedPerson))
 })
 
+// Error handling middleware
 app.use((error, request, response, next) => {
   console.log(error.message)
 
